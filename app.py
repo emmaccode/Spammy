@@ -12,26 +12,13 @@ if __name__ == '__main__':
 @app.route('/')
 def template():
     try:
-        bathrooms = request.args['bathrooms']
-        bedrooms = request.args['bedrooms']
-        squarefeet = request.args['squarefeet']
-        yearbuilt = request.args['yearbuilt']
+        txt = request.args['text']
     except KeyError as e:
         return ('Some Values are missing')
-    try:
-        bathrooms = float(bathrooms)
-        bedrooms = float(bedrooms)
-        squarefeet = float(squarefeet)
-        yearbuilt = int(yearbuilt)
-    except ValueError as e:
-        return ('That aint a number, Cowboy.')
-    else:
-        dcry = pd.DataFrame({"YearBuilt": [yearbuilt],
-        "LotSize": [squarefeet],"Bedrooms": [bedrooms],
-        "Bathrooms": [bathrooms]})
-        pipeline = load('/ML/alg.sav')
-        estimate = pipeline.predict(dcry)
-        return str(int(estimate))
+    df = pd.DataFrame({'input': [txt]})
+    pipeline = load('alg.sav')
+    estimate = pipeline.predict(df['input'])
+    return(estimate)
 
 if __name__ == '__main__':
     app.run(debug=False)
